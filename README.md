@@ -1,502 +1,75 @@
-# SnapDL Split Workspace
+# SnapDL - Yahoo Finance Historical Data Downloader
 
-Root repository sekarang menggunakan mode split deploy:
+Download historical stock data from Yahoo Finance with ease. Supports single and bulk downloads with professional Excel export.
 
-- `frontend/` untuk UI aplikasi
-- `backend/` untuk API aplikasi
-- `legacy-monolith/` sebagai arsip struktur lama
+## 🚀 Key Features
 
-Quick start lokal:
+- **Single Symbol Download** - Fetch and analyze individual stocks
+- **Bulk Download** - Download multiple symbols at once
+- **Excel Export** - Professional Excel files with separate sheets per company
+- **Event Window Analysis** - Trading-day based event windows for research
+- **Outstanding Shares** - Automatic share count data
+- **Corporate Actions** - Track dividends and splits automatically
 
+## 🛠 Quick Start (Local Development)
+
+### Terminal 1 - Backend
 ```bash
-# terminal 1
 cd backend
 npm install
 npm run dev -- --port 3001
+```
 
-# terminal 2
+### Terminal 2 - Frontend
+```bash
 cd frontend
 npm install
-# set NEXT_PUBLIC_API_BASE_URL=http://localhost:3001
+# Set API URL (optional, uses http://localhost:3001 by default)
 npm run dev -- --port 3000
 ```
 
-Lihat panduan deploy split di `DEPLOYMENT_SPLIT_GUIDE.md`.
+Visit [http://localhost:3000](http://localhost:3000)
 
----
+## 📦 Technology Stack
 
-# 🎉 Yahoo Finance Historical Downloader V3
+- **Frontend**: Next.js 16, React 19, Tailwind CSS, TypeScript
+- **Backend**: Next.js API Routes, ExcelJS, TypeScript
+- **Deployment**: Docker-ready, supports Appwrite, Vercel, self-hosted
 
-## ✨ What's New in V3
+## 🌐 Live Architecture
 
-### 🎯 Critical Upgrades
+- `frontend/` - UI application
+- `backend/` - API services
+- **Deployment**: Split-ready (separate frontend/backend URLs)
 
-1. **Trading-Day Based Event Window** - Event windows now use actual trading days from your data, not calendar days
-2. **Excel Export with Separate Sheets** - Bulk downloads create professional Excel files with individual sheets per company
-3. **Outstanding Shares** - Automatic fetching and display of outstanding shares data
+## 📖 Documentation
 
----
+| Topic | Link |
+|-------|------|
+| Setup & Features | See `frontend/` and `backend/` README files |
+| API Routes | Check `backend/app/api/` folder |
+| Security | CORS + rate limiting included |
 
-## 🚀 V3 Features
+## ⚡ Key Capabilities
 
-### 1. Trading-Day Event Window Validation
+| Feature | Support |
+|---------|---------|
+| CSV/Excel Export | ✅ Excel (multi-sheet) |
+| Date Ranges | ✅ Custom start/end dates |
+| Intervals | ✅ 1d, 1wk, 1mo |
+| Data Columns | ✅ Open, High, Low, Close, Volume, Adjusted |
+| Batch Operations | ✅ Up to 50 symbols |
 
-**The Problem with V2:**
-- V2 calculated t-5 and t+5 using calendar days
-- Weekend and holidays created incorrect windows
-- Event window dates might not exist in actual trading data
+## 🔒 Security
 
-**V3 Solution:**
-- Uses **actual trading dates** from fetched data
-- t-5 means "5 trading days before", not "5 calendar days"
-- Window start and end are guaranteed to be real trading dates
-- Handles weekends and holidays automatically
+- CORS whitelist enforcement
+- Rate limiting (120 requests/minute default)
+- Security headers on all responses
+- Health check endpoint included
 
-**How It Works:**
+## 📝 License
 
-```typescript
-// V2 (Calendar-based) ❌
-Event Date: 2024-03-15 (Friday)
-t-5: 2024-03-10 (Sunday - not a trading day!)
-t+5: 2024-03-20 (Wednesday)
-
-// V3 (Trading-day based) ✅
-Event Date: 2024-03-15 (Friday)
-Trading dates: [..., 2024-03-11, 2024-03-12, 2024-03-13, 2024-03-14, 2024-03-15, ...]
-t-5: 2024-03-08 (5 trading days before)
-t+5: 2024-03-22 (5 trading days after)
-```
-
-**Alignment Modes:**
-
-When your event date falls on a weekend or holiday:
-
-1. **Nearest Trading Day** (default)
-   - Finds the closest trading day to your event date
-   - Example: Saturday → Friday or Monday (whichever is closer)
-
-2. **Previous Trading Day**
-   - Uses the last trading day before event
-   - Example: Saturday → Friday
-
-3. **Next Trading Day**
-   - Uses the first trading day after event
-   - Example: Saturday → Monday
-
-**UI Features:**
-- Shows aligned event date if different from input
-- Displays window size in trading days
-- Warns if window is incomplete (insufficient data)
-- Status: AMAN or TIDAK COCOK based on corporate actions in window
-
----
-
-### 2. Excel Export with Separate Sheets
-
-**The Problem with V2:**
-- CSV format combined all symbols in one file
-- Hard to analyze individual companies
-- No summary or metadata
-
-**V3 Solution:**
-- Generates professional Excel (.xlsx) files
-- Each company gets its own sheet
-- Includes summary and corporate actions sheets
-
-**Excel File Structure:**
-
-```
-BULK_2024-01-01_2024-12-31_1d_desc.xlsx
-├── _SUMMARY
-│   ├── Symbol | Rows | Outstanding Shares | Corporate Actions | Status
-│   ├── AAPL   | 252  | 15,204,880,000     | 4                 | Success
-│   ├── MSFT   | 252  | 7,432,649,984      | 2                 | Success
-│   └── GOOGL  | 252  | 5,856,000,000      | 1                 | Success
-│
-├── _CORPORATE_ACTIONS
-│   ├── Symbol | Date       | Type     | Value
-│   ├── AAPL   | 2024-02-09 | DIVIDEND | 0.2400
-│   ├── MSFT   | 2024-02-15 | DIVIDEND | 0.7500
-│   └── ...
-│
-├── AAPL (sheet)
-│   ├── Date       | Open   | High   | Low    | Close  | Volume
-│   ├── 2024-12-31 | 185.00 | 186.50 | 184.00 | 185.50 | 50000000
-│   └── ...
-│   └── Outstanding Shares: 15,204,880,000
-│
-├── MSFT (sheet)
-│   └── ... (same structure)
-│
-└── GOOGL (sheet)
-    └── ... (same structure)
-```
-
-**Benefits:**
-- ✅ Easy to analyze individual companies
-- ✅ Summary sheet for quick overview
-- ✅ All corporate actions in one place
-- ✅ Outstanding shares included
-- ✅ Professional formatting (styled headers)
-- ✅ Ready for Excel pivot tables and analysis
-
----
-
-### 3. Outstanding Shares
-
-**What It Is:**
-- Total number of shares outstanding for a company
-- Fetched from Yahoo Finance quoteSummary endpoint
-- Useful for market cap calculations and normalization
-
-**Display:**
-
-**Single Mode:**
-- Shows in summary cards (purple card)
-- Displayed in millions (e.g., "15,204.9M")
-
-**Bulk Mode:**
-- Included in Excel _SUMMARY sheet
-- Added as note at bottom of each company sheet
-
-**Graceful Handling:**
-- Shows "N/A" if data not available
-- No errors or crashes if missing
-- Optional data, doesn't block other features
-
----
-
-## 📊 Feature Comparison
-
-| Feature | V1 | V2 | V3 |
-|---------|----|----|-----|
-| Single Symbol Download | ✅ | ✅ | ✅ |
-| Bulk Download | ❌ | ✅ CSV | ✅ **Excel** |
-| Event Window | ❌ | ✅ Calendar | ✅ **Trading Days** |
-| Event Date Alignment | ❌ | ❌ | ✅ **3 Modes** |
-| Outstanding Shares | ❌ | ❌ | ✅ **NEW** |
-| Separate Sheets | ❌ | ❌ | ✅ **NEW** |
-| Summary Sheet | ❌ | ❌ | ✅ **NEW** |
-| Window Warnings | ❌ | ❌ | ✅ **NEW** |
-
----
-
-## 🎓 Usage Guide
-
-### Event Window Validation (V3)
-
-**Step-by-Step:**
-
-1. **Fetch Data First**
-   - Single mode: Enter symbol and fetch
-   - Bulk mode: Enter symbols and bulk fetch
-
-2. **Scroll to Event Window Card**
-   - Located in right panel
-
-3. **Enter Event Date**
-   - The date of your event (e.g., earnings announcement)
-   - Can be any date (weekend/holiday OK)
-
-4. **Set Window Size**
-   - t- (pre-event): Number of trading days before
-   - t+ (post-event): Number of trading days after
-   - Example: t-5, t+5 = 11 trading days total
-
-5. **Choose Alignment Mode**
-   - Nearest: Closest trading day (default)
-   - Previous: Last trading day before event
-   - Next: First trading day after event
-
-6. **Review Results**
-   - Aligned event date (if different)
-   - Window start and end (actual trading dates)
-   - Window size (trading days count)
-   - Warning (if window incomplete)
-   - Status: AMAN or TIDAK COCOK
-
-**Example:**
-
-```
-Input:
-- Event Date: 2024-03-16 (Saturday)
-- t-: 5
-- t+: 5
-- Alignment: Nearest
-
-Output:
-- Event Date Aligned: 2024-03-16 → 2024-03-15 (Friday)
-- Window: 2024-03-08 s/d 2024-03-22
-- Window Size: 11 trading days
-- Status: AMAN (no corporate actions in window)
-```
-
----
-
-### Bulk Excel Export (V3)
-
-**Step-by-Step:**
-
-1. **Switch to Bulk Mode**
-   - Click "Bulk Symbols" tab in header
-
-2. **Enter Symbols**
-   ```
-   AAPL
-   MSFT
-   GOOGL
-   ```
-
-3. **Set Date Range and Interval**
-   - Same for all symbols
-
-4. **Select Columns**
-   - Choose which data columns to export
-   - Symbol column added automatically
-
-5. **Bulk Fetch**
-   - Click "Bulk Fetch" button
-   - Wait for all symbols to load
-
-6. **Review Summary**
-   - Success count
-   - Failed count (if any)
-   - Failed symbols list
-
-7. **Download Excel**
-   - Click "Download Excel (X symbols)"
-   - File: `BULK_2024-01-01_2024-12-31_1d_desc.xlsx`
-
-8. **Open in Excel**
-   - _SUMMARY sheet: Overview
-   - _CORPORATE_ACTIONS: All events
-   - Individual sheets: Per-company data
-
----
-
-## 🔬 Research Applications
-
-### Event Study with V3
-
-**Traditional Workflow (Manual):**
-1. Download data for each company
-2. Manually check if event date is trading day
-3. Count trading days for window
-4. Check corporate actions manually
-5. Exclude contaminated samples
-
-**V3 Workflow (Automated):**
-1. Bulk fetch all companies
-2. Enter event date (any date)
-3. Set window size (t-5, t+5)
-4. System auto-aligns to trading days
-5. System auto-checks corporate actions
-6. Status shows AMAN or TIDAK COCOK
-7. Download clean Excel file
-
-**Time Saved:** ~90% reduction in manual work
-
----
-
-### Panel Data Analysis with V3
-
-**V2 Approach:**
-- Download CSV with all symbols mixed
-- Manually separate in Excel/R/Python
-- No metadata or summary
-
-**V3 Approach:**
-- Download Excel with separate sheets
-- Each company ready to analyze
-- Summary sheet for overview
-- Outstanding shares for normalization
-- Corporate actions sheet for reference
-
-**Benefits:**
-- ✅ Immediate use in Excel pivot tables
-- ✅ Easy import to R/Python (read_excel by sheet)
-- ✅ Professional presentation for papers
-- ✅ All metadata included
-
----
-
-## 🎯 Best Practices
-
-### Event Window
-
-**Recommended Window Sizes:**
-
-| Study Type | t- | t+ | Total Days | Use Case |
-|------------|----|----|------------|----------|
-| Short-term | 1 | 1 | 3 | Immediate reaction |
-| Standard | 5 | 5 | 11 | Most event studies |
-| Medium | 10 | 10 | 21 | Longer-term effects |
-| Long | 30 | 30 | 61 | Strategic changes |
-
-**Alignment Mode Selection:**
-
-- **Nearest** (default): Best for most cases
-- **Previous**: When event happens after market close
-- **Next**: When event happens before market open
-
-**Handling TIDAK COCOK Status:**
-
-1. **Option 1: Exclude**
-   - Remove symbol from sample
-   - Document in methodology
-
-2. **Option 2: Adjust Window**
-   - Try different window size
-   - Avoid corporate action dates
-
-3. **Option 3: Use Adjusted Prices**
-   - Use Adj Close column
-   - Document adjustment method
-
----
-
-### Bulk Excel Export
-
-**Symbol Batching:**
-- Recommended: 10-20 symbols per batch
-- Maximum: 50 symbols (performance)
-- Very large: Split into multiple batches
-
-**Sheet Organization:**
-- _SUMMARY always first
-- _CORPORATE_ACTIONS second
-- Symbols alphabetically
-
-**Excel Tips:**
-- Use pivot tables on _SUMMARY
-- Filter corporate actions by type
-- Compare companies side-by-side
-- Export individual sheets as CSV if needed
-
----
-
-## 🔧 Technical Details
-
-### Trading-Day Algorithm
-
-```typescript
-function calculateTradingDayWindow(
-  eventDate: string,
-  windowPre: number,
-  windowPost: number,
-  tradingDates: string[]
-) {
-  // 1. Sort trading dates
-  const sorted = tradingDates.sort();
-  
-  // 2. Find/align event date
-  const eventIndex = findOrAlign(eventDate, sorted, alignmentMode);
-  
-  // 3. Calculate window using indices
-  const startIndex = Math.max(0, eventIndex - windowPre);
-  const endIndex = Math.min(sorted.length - 1, eventIndex + windowPost);
-  
-  // 4. Return actual trading dates
-  return {
-    windowStart: sorted[startIndex],
-    windowEnd: sorted[endIndex],
-    windowSize: endIndex - startIndex + 1
-  };
-}
-```
-
-**Key Points:**
-- Uses array indices, not date arithmetic
-- Guaranteed to return real trading dates
-- Handles edge cases (insufficient data)
-- Warns when window incomplete
-
----
-
-### Excel Generation
-
-**Library:** ExcelJS
-
-**Process:**
-1. Create workbook
-2. Add _SUMMARY sheet with stats
-3. Add _CORPORATE_ACTIONS sheet
-4. For each symbol:
-   - Create sheet (sanitized name)
-   - Add headers (styled)
-   - Add sorted data
-   - Add outstanding shares note
-5. Generate buffer
-6. Return as download
-
-**Styling:**
-- Headers: Bold, colored background
-- Data: Clean, formatted
-- Outstanding shares: Bold note at bottom
-
----
-
-## 📋 API Routes
-
-### New in V3
-
-#### `POST /api/fetch-outstanding-shares`
-```json
-Request:
-{
-  "symbol": "AAPL"
-}
-
-Response:
-{
-  "symbol": "AAPL",
-  "outstandingShares": 15204880000,
-  "source": "defaultKeyStatistics"
-}
-```
-
-#### `POST /api/bulk-export-xlsx`
-```json
-Request:
-{
-  "bulkData": [
-    {
-      "symbol": "AAPL",
-      "rows": [...],
-      "corporateActions": [...],
-      "outstandingShares": 15204880000
-    }
-  ],
-  "selectedColumns": ["date", "close", "volume"],
-  "sortOrder": "desc",
-  "includeHeaders": true,
-  "startDate": "2024-01-01",
-  "endDate": "2024-12-31",
-  "interval": "1d"
-}
-
-Response:
-Excel file (binary)
-```
-
----
-
-## 🎨 UI/UX Updates
-
-### Event Window Card
-
-**New Elements:**
-- Alignment mode dropdown
-- Aligned event date display
-- Window size indicator
-- Warning badge (incomplete window)
-- Trading days label
-
-**Visual Feedback:**
-- Blue badge: Event date aligned
-- Amber badge: Warning
-- Green success: AMAN status
-- Red alert: TIDAK COCOK status
+Private project
 
 ### Download Card
 
