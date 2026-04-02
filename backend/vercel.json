@@ -1,0 +1,23 @@
+{
+    "framework": "nextjs",
+    "functions": {
+        "app/api/bulk-fetch-history/route.ts": {
+            "maxDuration": 60
+        },
+        "app/api/bulk-export-xlsx/route.ts": {
+            "maxDuration": 60
+        },
+        "app/api/bulk-export-csv/route.ts": {
+            "maxDuration": 60
+        },
+        "app/api/fetch-history/route.ts": {
+            "maxDuration": 30
+        },
+        "app/api/export-csv/route.ts": {
+            "maxDuration": 30
+        },
+        "app/api/parse-url/route.ts": {
+            "maxDuration": 10
+        }
+    }
+}
