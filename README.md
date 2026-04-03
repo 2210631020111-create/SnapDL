@@ -46,6 +46,7 @@ Visit [http://localhost:3000](http://localhost:3000)
 
 | Topic | Link |
 |-------|------|
+| Appwrite Deployment | `APPWRITE_DEPLOYMENT_GUIDE.md` |
 | Setup & Features | See `frontend/` and `backend/` README files |
 | API Routes | Check `backend/app/api/` folder |
 | Security | CORS + rate limiting included |
