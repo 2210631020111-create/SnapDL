@@ -106,7 +106,7 @@ export function SettingsPanel(props: SettingsPanelProps) {
                     </div>
 
                     {/* Date inputs */}
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div className="space-y-1">
                             <label className="micro-label">Start</label>
                             <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-8 text-xs" />
@@ -118,7 +118,7 @@ export function SettingsPanel(props: SettingsPanelProps) {
                     </div>
 
                     {/* Interval + Sort — compact 2-col */}
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <div className="space-y-1">
                             <label className="micro-label">Interval</label>
                             <Tabs value={interval} onValueChange={setInterval} className="w-full">
@@ -173,7 +173,7 @@ export function SettingsPanel(props: SettingsPanelProps) {
                         ))}
                     </div>
                     <Separator />
-                    <div className="grid grid-cols-2 gap-y-1.5 gap-x-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-1.5 gap-x-2">
                         {COLUMNS.map(col => (
                             <div key={col.key} className="flex items-center gap-1.5">
                                 <Checkbox

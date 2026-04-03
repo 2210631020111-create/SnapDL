@@ -174,11 +174,11 @@ export function BottomPanels({
                     ) : (
                         <div className="space-y-1.5">
                             {corporateActions.slice(0, 6).map((a, i) => (
-                                <div key={i} className="flex items-center gap-2 rounded-lg border border-border/50 p-2 hover:bg-accent/30 transition-colors animate-fade-in-up" style={{ animationDelay: `${i * 30}ms` }}>
+                                <div key={i} className="flex flex-wrap items-center gap-2 rounded-lg border border-border/50 p-2 hover:bg-accent/30 transition-colors animate-fade-in-up" style={{ animationDelay: `${i * 30}ms` }}>
                                     <Badge variant="outline" className="font-mono text-[9px] h-5">{a.symbol}</Badge>
                                     <Badge variant={a.type === 'DIVIDEND' ? 'success' : 'warning'} className="text-[9px] h-5">{a.type}</Badge>
-                                    <span className="text-xs font-medium flex-1">{a.date}</span>
-                                    <span className="text-[10px] text-muted-foreground">{a.value}</span>
+                                    <span className="text-xs font-medium flex-1 min-w-0">{a.date}</span>
+                                    <span className="text-[10px] text-muted-foreground break-words">{a.value}</span>
                                 </div>
                             ))}
                             {corporateActions.length > 6 && (
@@ -203,7 +203,7 @@ export function BottomPanels({
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2.5 pt-2.5">
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                         <div className="space-y-1">
                             <label className="micro-label">Event Date</label>
                             <Input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="h-8 text-xs" />
@@ -260,7 +260,7 @@ export function BottomPanels({
                                         <TrendIcon className="h-3.5 w-3.5" />
                                         Abnormal Return Analysis
                                     </div>
-                                    <div className="grid grid-cols-3 gap-2">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                                         <div className="text-center">
                                             <div className="text-[9px] font-bold uppercase text-muted-foreground">Actual</div>
                                             <div className={cn('text-sm font-bold tabular-nums', abnormalReturn.actualReturn >= 0 ? 'text-emerald-600' : 'text-red-500')}>
@@ -292,11 +292,11 @@ export function BottomPanels({
                                 <div className="space-y-1.5">
                                     <p className="text-[10px] font-bold text-destructive uppercase">Actions dalam Window:</p>
                                     {eventWindowResult.actionsInWindow.map((a, i) => (
-                                        <div key={i} className="flex items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-2">
+                                        <div key={i} className="flex flex-wrap items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-2">
                                             <Badge variant="outline" className="font-mono text-[9px] h-5">{a.symbol}</Badge>
                                             <Badge variant="destructive" className="text-[9px] h-5">{a.type}</Badge>
-                                            <span className="text-xs font-semibold text-destructive">{a.date}</span>
-                                            <span className="text-[10px] text-destructive/70">{a.value}</span>
+                                            <span className="text-xs font-semibold text-destructive min-w-0">{a.date}</span>
+                                            <span className="text-[10px] text-destructive/70 break-words">{a.value}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -323,7 +323,7 @@ export function BottomPanels({
                 <CardContent className="space-y-2.5 pt-2.5 stagger-children">
 
                     {/* Format selector */}
-                    <div className="grid grid-cols-3 gap-1.5">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
                         {formatOptions.map(f => (
                             <button
                                 key={f.value}

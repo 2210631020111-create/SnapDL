@@ -117,7 +117,7 @@ export function PreviewPanel({
 
                     {/* Stats row */}
                     {totalRows > 0 && (
-                        <div className="grid grid-cols-3 gap-1.5 animate-fade-in-up">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 animate-fade-in-up">
                             <div className="rounded-lg p-2.5 border border-border/50 bg-card stat-card-blue">
                                 <div className="micro-label">Total Rows</div>
                                 <div className="text-lg font-bold text-foreground tabular-nums">{totalRows.toLocaleString()}</div>
@@ -135,12 +135,12 @@ export function PreviewPanel({
 
                     {/* Filters */}
                     {totalRows > 0 && (
-                        <div className="flex gap-1.5">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                             {mode === 'bulk' && uniqueSymbols.length > 0 && (
                                 <select
                                     value={selectedSymbolFilter}
                                     onChange={(e) => setSelectedSymbolFilter(e.target.value)}
-                                    className="h-8 rounded-lg border border-input px-2 text-xs bg-background shrink-0 dark:bg-input/20 dark:[color-scheme:dark] transition-all focus:ring-2 focus:ring-primary/20"
+                                    className="h-8 w-full sm:w-auto rounded-lg border border-input px-2 text-xs bg-background shrink-0 dark:bg-input/20 dark:[color-scheme:dark] transition-all focus:ring-2 focus:ring-primary/20"
                                 >
                                     <option value="all">All ({uniqueSymbols.length})</option>
                                     {uniqueSymbols.map(sym => <option key={sym} value={sym}>{sym}</option>)}
@@ -154,7 +154,7 @@ export function PreviewPanel({
                                 <select
                                     value={rowsPerPage}
                                     onChange={(e) => setRowsPerPage(Number(e.target.value))}
-                                    className="h-8 rounded-lg border border-input px-2 text-xs bg-background shrink-0 dark:bg-input/20 dark:[color-scheme:dark] w-16"
+                                    className="h-8 w-full sm:w-16 rounded-lg border border-input px-2 text-xs bg-background shrink-0 dark:bg-input/20 dark:[color-scheme:dark]"
                                 >
                                     {[10, 25, 50, 100].map(n => <option key={n} value={n}>{n}</option>)}
                                 </select>
@@ -281,7 +281,7 @@ export function PreviewPanel({
                             </div>
 
                             {/* Pagination */}
-                            <div className="flex items-center justify-between">
+                            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                 <p className="text-[10px] text-muted-foreground tabular-nums">
                                     {startItem}–{endItem} dari {filteredData.length.toLocaleString()}
                                 </p>
@@ -312,8 +312,8 @@ export function PreviewPanel({
                         <CardDescription className="text-xs">Detail kegagalan fetch dan saran perbaikan</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="overflow-hidden rounded-lg border border-destructive/15">
-                            <table className="w-full text-xs">
+                        <div className="overflow-x-auto rounded-lg border border-destructive/15">
+                            <table className="min-w-[520px] w-full text-xs">
                                 <thead>
                                     <tr className="border-b border-destructive/10 bg-destructive/5">
                                         <th className="px-3 py-2 text-left text-[10px] font-bold uppercase tracking-wider text-destructive/80">Symbol</th>

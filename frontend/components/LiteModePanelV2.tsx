@@ -338,7 +338,7 @@ export function LiteModePanelV2({
         return (
           <div className="space-y-3">
             <p className="text-sm font-semibold text-foreground">Pilih periode data</p>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1">
                 <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">Mulai</p>
                 <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="h-10 text-sm border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950" />
@@ -367,7 +367,7 @@ export function LiteModePanelV2({
             {includeEventWindow ? (
               <div className="space-y-3">
                 <Input type="date" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="h-10 text-sm border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950" placeholder="Event date" />
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Input type="number" min={0} value={windowPre} onChange={(e) => setWindowPre(Number(e.target.value))} className="h-10 text-sm border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950" placeholder="t−" />
                   <Input type="number" min={0} value={windowPost} onChange={(e) => setWindowPost(Number(e.target.value))} className="h-10 text-sm border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950" placeholder="t+" />
                 </div>
@@ -392,9 +392,9 @@ export function LiteModePanelV2({
             <div className="space-y-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-3">
               <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Konfirmasi</p>
               {summaryRows.map((item) => (
-                <div key={item.label} className="flex items-center justify-between text-sm">
+                <div key={item.label} className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:justify-between">
                   <span className="text-foreground/70">{item.label}</span>
-                  <span className="font-semibold text-foreground text-right">{item.value}</span>
+                  <span className="font-semibold text-foreground sm:text-right">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -434,7 +434,7 @@ export function LiteModePanelV2({
 
     return (
       <Card className="panel-surface">
-        <CardHeader className="flex items-center justify-between">
+        <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle className="text-sm flex items-center gap-2">
               <Database className="h-4 w-4 text-primary" /> Preview data snapshot
@@ -583,9 +583,9 @@ export function LiteModePanelV2({
     <div className="relative w-full max-w-5xl mx-auto">
       <div className="relative space-y-5">
   {/* Hero form card */}
-  <div className="rounded-3xl border border-white/70 dark:border-purple-500/30 bg-white dark:bg-slate-950/40 dark:backdrop-blur-md shadow-[0_30px_70px_rgba(15,23,42,0.14)] dark:shadow-[0_30px_70px_rgba(0,0,0,0.45)] px-8 py-8">
+  <div className="rounded-3xl border border-white/70 dark:border-purple-500/30 bg-white dark:bg-slate-950/40 dark:backdrop-blur-md shadow-[0_30px_70px_rgba(15,23,42,0.14)] dark:shadow-[0_30px_70px_rgba(0,0,0,0.45)] px-5 py-6 sm:px-8 sm:py-8">
           <div className="space-y-5">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <h2 className="text-2xl font-bold text-foreground">Lite Mode</h2>
               <span className="text-[12px] font-semibold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                 Step {step}/{STEP_MAX}

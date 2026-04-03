@@ -84,7 +84,7 @@ export function InputPanel({
                         {/* URL Paste */}
                         <div className="space-y-1.5">
                             <label className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">URL Yahoo Finance</label>
-                            <div className="flex gap-2">
+                            <div className="flex flex-col gap-2 sm:flex-row">
                                 <div className="relative flex-1">
                                     <Link2 className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                                     <Input
@@ -93,7 +93,7 @@ export function InputPanel({
                                         className="pl-9 h-9 text-xs border-slate-200 dark:border-purple-500/30 bg-white dark:bg-slate-900/50 focus-visible:ring-primary/30"
                                     />
                                 </div>
-                                <Button onClick={onParseUrl} variant="secondary" className="h-9 px-4 shrink-0 shadow-sm text-xs font-semibold">
+                                <Button onClick={onParseUrl} variant="secondary" className="h-9 px-4 w-full sm:w-auto shrink-0 shadow-sm text-xs font-semibold">
                                     Parse
                                 </Button>
                             </div>
